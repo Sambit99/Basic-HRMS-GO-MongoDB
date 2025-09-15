@@ -42,9 +42,10 @@ func ConnectDB() {
 
 	fmt.Println("✅ Connected to MongoDB")
 
-	db = client.Database(MONGO_DATABASE_NAME).Collection(MONGO_COLLECTION_NAME)
+	collection := client.Database(MONGO_DATABASE_NAME).Collection(MONGO_COLLECTION_NAME)
+	db = collection
 }
 
-func getDB() *mongo.Collection {
+func GetDB() *mongo.Collection {
 	return db
 }
