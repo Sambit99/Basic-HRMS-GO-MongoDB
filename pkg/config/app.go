@@ -15,7 +15,7 @@ import (
 var db *mongo.Collection
 
 func ConnectDB() {
-	if err := godotenv.Load("../../.env.development"); err != nil {
+	if err := godotenv.Load(".env.development"); err != nil {
 		fmt.Println("Error loading .env file")
 	}
 
