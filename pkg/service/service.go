@@ -68,3 +68,19 @@ func GetEmployee(empId string) model.Employee {
 
 	return employee
 }
+
+func CreateEmployee(emp model.NewEmployeeDto) string {
+
+	newEmployee, err := db.InsertOne(ctx, emp, nil)
+
+	if err != nil {
+		log.Fatal("Error while creating user")
+	}
+
+	oid, ok := newEmployee.InsertedID.(bson.ObjectID)
+	if !ok {
+		log.Fatal("Inserted ID is not of type ObjectID")
+	}
+
+	return oid.Hex()
+}
