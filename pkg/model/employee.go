@@ -8,3 +8,9 @@ type Employee struct {
 	Salary float64       `json:"salary" bson:"salary"`
 	Age    int64         `json:"age,omitempty" bson:"age,omitempty"`
 }
+
+type NewEmployeeDto struct {
+	Name   string  `json:"name" bson:"name"`
+	Salary float64 `json:"salary" bson:"salary"`
+	Age    int64   `json:"age,omitempty" bson:"age,omitempty"`
+}
