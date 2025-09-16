@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/Sambit99/Basic-HRMS-GO-MongoDB/pkg/config"
+	"github.com/Sambit99/Basic-HRMS-GO-MongoDB/pkg/model"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
@@ -40,4 +42,29 @@ func GetEmployees() []bson.M {
 	}
 
 	return employees
+}
+
+func GetEmployee(empId string) model.Employee {
+
+	ID, err := bson.ObjectIDFromHex(empId)
+
+	if err != nil {
+		log.Fatal("Error while parsing Employee ID", err.Error())
+	}
+
+	var employee model.Employee
+
+	filter := bson.M{"_id": ID}
+
+	err = db.FindOne(ctx, filter, nil).Decode(&employee)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			fmt.Println("No Records found")
+		} else {
+			log.Fatal("Error while finding Employee by id", err.Error())
+		}
+	}
+
+	return employee
 }
