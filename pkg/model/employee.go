@@ -14,3 +14,10 @@ type NewEmployeeDto struct {
 	Salary float64 `json:"salary" bson:"salary"`
 	Age    int64   `json:"age,omitempty" bson:"age,omitempty"`
 }
+
+type UpdateEmployeeDto struct {
+	ID     bson.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Name   string        `json:"name" bson:"name"`
+	Salary float64       `json:"salary" bson:"salary"`
+	Age    int64         `json:"age,omitempty" bson:"age,omitempty"`
+}
