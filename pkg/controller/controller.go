@@ -27,7 +27,16 @@ func GetAllEmployee(c *fiber.Ctx) error {
 }
 
 func GetEmployee(c *fiber.Ctx) error {
-	return nil
+	id := c.Params("id")
+
+	employee := service.GetEmployee(id)
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status":     "success",
+		"statuscode": 200,
+		"message":    "Request completed",
+		"data":       employee,
+	})
 }
 
 func NewEmployee(c *fiber.Ctx) error {
