@@ -103,3 +103,43 @@ func DeleteEmployee(id string) bool {
 
 	return result.DeletedCount > 0
 }
+
+func UpdateEmployee(updatedEmployee model.UpdateEmployeeDto) bool {
+	filter := bson.M{"_id": updatedEmployee.ID}
+
+	strId := updatedEmployee.ID.Hex()
+
+	existingEmp := GetEmployee(strId)
+
+	if updatedEmployee.Name != "" {
+		existingEmp.Name = updatedEmployee.Name
+	}
+
+	if updatedEmployee.Age != 0 {
+		existingEmp.Age = updatedEmployee.Age
+	}
+
+	if updatedEmployee.Salary != 0 {
+		existingEmp.Salary = updatedEmployee.Salary
+	}
+
+	update := bson.M{
+		"$set": bson.M{
+			"name":   existingEmp.Name,
+			"age":    existingEmp.Age,
+			"salary": existingEmp.Salary,
+		},
+	}
+
+	result, err := db.UpdateOne(ctx, filter, update)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			fmt.Println("No documents found")
+		} else {
+			log.Fatal("Error while updating user", err.Error())
+		}
+	}
+
+	return result.ModifiedCount > 0
+}
