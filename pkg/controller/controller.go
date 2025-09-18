@@ -1,9 +1,12 @@
 package controller
 
 import (
+	"log"
+
 	"github.com/Sambit99/Basic-HRMS-GO-MongoDB/pkg/model"
 	"github.com/Sambit99/Basic-HRMS-GO-MongoDB/pkg/service"
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 func GetAllEmployee(c *fiber.Ctx) error {
@@ -82,5 +85,39 @@ func DeleteEmployee(c *fiber.Ctx) error {
 }
 
 func UpdateEmployee(c *fiber.Ctx) error {
-	return nil
+	id := c.Params("id")
+
+	var updatedEmployee model.UpdateEmployeeDto
+
+	if err := c.BodyParser(&updatedEmployee); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "failed",
+			"message": "Error while parsing body",
+			"error":   err.Error(),
+		})
+	}
+
+	parsedId, err := bson.ObjectIDFromHex(id)
+
+	if err != nil {
+		log.Fatal("Error while converting Employee Id, From Hex to Object ID", err.Error())
+	}
+
+	updatedEmployee.ID = parsedId
+
+	isUpdated := service.UpdateEmployee(updatedEmployee)
+
+	if !isUpdated {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":     "failed",
+			"statuscode": 500,
+			"message":    "Error while updating Employee",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status":     "success",
+		"statuscode": 200,
+		"message":    "Employee updated",
+	})
 }
