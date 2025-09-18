@@ -62,7 +62,23 @@ func NewEmployee(c *fiber.Ctx) error {
 }
 
 func DeleteEmployee(c *fiber.Ctx) error {
-	return nil
+	id := c.Params("id")
+
+	success := service.DeleteEmployee(id)
+
+	if success {
+		return c.Status(fiber.StatusNoContent).JSON(fiber.Map{
+			"status":     "success",
+			"statuscode": 204,
+			"message":    "Request completed",
+		})
+	}
+
+	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		"status":     "failed",
+		"statuscode": 500,
+		"message":    "Error while deleting Employee",
+	})
 }
 
 func UpdateEmployee(c *fiber.Ctx) error {
