@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/Sambit99/Basic-HRMS-GO-MongoDB/pkg/model"
 	"github.com/Sambit99/Basic-HRMS-GO-MongoDB/pkg/service"
 	"github.com/gofiber/fiber/v2"
 )
@@ -40,7 +41,24 @@ func GetEmployee(c *fiber.Ctx) error {
 }
 
 func NewEmployee(c *fiber.Ctx) error {
-	return nil
+	var employee model.NewEmployeeDto
+
+	if err := c.BodyParser(&employee); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "failed",
+			"message": "Error while parsing body",
+			"error":   err.Error(),
+		})
+	}
+
+	id := service.CreateEmployee(employee)
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"status": "success",
+		"data": fiber.Map{
+			"id": id,
+		},
+	})
 }
 
 func DeleteEmployee(c *fiber.Ctx) error {
