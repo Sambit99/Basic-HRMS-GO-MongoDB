@@ -84,3 +84,22 @@ func CreateEmployee(emp model.NewEmployeeDto) string {
 
 	return oid.Hex()
 }
+
+func DeleteEmployee(id string) bool {
+
+	parsedId, err := bson.ObjectIDFromHex(id)
+
+	if err != nil {
+		log.Fatal("Error while parsing Employee ID", err.Error())
+	}
+
+	filter := bson.M{"_id": parsedId}
+
+	result, err := db.DeleteOne(ctx, filter, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return result.DeletedCount > 0
+}
